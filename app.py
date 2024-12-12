@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from models import initialize_database
 from routes import blueprints
-
+from routes.month import get_monthly_summary
 from routes.book import get_book_data
 from routes.gender import Gender
 
