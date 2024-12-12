@@ -23,7 +23,7 @@
         <canvas id="book_chart"></canvas>
         <section>
             <h2>貸出データ</h2>
-            <canvas id="book_chart"></canvas>
+            <canvas id="book_data"></canvas>
         </section>
         
         <body>
@@ -33,7 +33,7 @@
                 const labels = book_data.map(data => data.name);
                 const data = book_data.map(data => data.count);
                 
-                const ctx = document.getElementById('book_chart').getContext('2d');
+                const ctx = document.getElementById('book_data').getContext('2d');
                 new Chart(cts, {
                     type: bar,
                     data: {
