@@ -14,6 +14,9 @@ for blueprint in blueprints:
 # ホームページのルート
 @app.route('/')
 def index():
+    book_data = get_book_data()
+    gender_data = get_gender_data()
+    month_data = get_month_data()
     return render_template('index.html')
 
 if __name__ == '__main__':
