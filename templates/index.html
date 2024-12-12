@@ -27,6 +27,35 @@
             <canvas id="genderChart" width="400" height="400"></canvas>
         </section>
 
+    <body>
+        <script>
+            // Pythonから渡されたデータ（サーバーサイドから埋め込み）
+            const genderData = {{ gender_data | tojson }};
+            const genderLabels = ['男', '女'];
+            const gender＿count = genderData.gender_count;
+    
+            // 円グラフの描画
+            const ctx = document.getElementById('genderChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: genderLabels,
+                    datasets: [{
+                        data: genderCounts,
+                        backgroundColor: ['#36A2EB', '#FF6384'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                    },
+                },
+            });
+        </script>
+    </body>
     </main>
 
     <footer>
@@ -34,33 +63,7 @@
     </footer>
 
 
-    <script>
-        // Pythonから渡されたデータ（サーバーサイドから埋め込み）
-        const genderData = {{ gender_data | tojson }};
-        const genderLabels = ['男', '女'];
-        const gender＿count = genderData.gender_count;
-
-        // 円グラフの描画
-        const ctx = document.getElementById('genderChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: genderLabels,
-                datasets: [{
-                    data: genderCounts,
-                    backgroundColor: ['#36A2EB', '#FF6384'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                },
-            },
-        });
-    </script>
+    
 </body>
 </html>
 
