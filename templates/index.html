@@ -32,7 +32,7 @@
             // Pythonから渡されたデータ（サーバーサイドから埋め込み）
             const genderData = {{ gender_data | tojson }};
             const genderLabels = ['男', '女'];
-            const gender＿count = genderData.gender_count;
+            const genderCounts = genderData.gender_count;
     
             // 円グラフの描画
             const ctx = document.getElementById('genderChart').getContext('2d');
