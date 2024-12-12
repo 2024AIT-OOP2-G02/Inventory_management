@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>図書館</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -19,8 +20,89 @@
                 <li><a href="{{ url_for('order.list') }}">貸出中</a></li>
             </ul>
         </nav>
-    </main>
+        <canvas id="book_chart"></canvas>
+        <section>
+            <h2>貸出データ</h2>
+            <canvas id="book_data"></canvas>
+        </section>
+        
+        <body>
+            <script>
+                const book_data = {{book_data | tojson}};
+                
+                const labels = book_data.map(data => data.name);
+                const data = book_data.map(data => data.count);
+                
+                const ctx = document.getElementById('book_data').getContext('2d');
+                new Chart(cts, {
+                    type: bar,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            labels: "貸出冊数",
+                            data: counts,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+            </script>
+        </body>
+    
+    
+    <body>
+    <h2>月毎の貸し出し冊数</h2>
+    <ccanvas id="book_count" width="400" heig="200"></ccanvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Pythonから受け取るデータ
+        const dataX = {{ month | tojson }};
+        const dataY = {{ book_count | tojson }};
 
+            //グラフの作成
+            const ctx = document.getElementById('book_count').getContext('2d');
+            const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dataX,
+                datasets: [{
+                    label: 'Sample Line Chart',
+                    data: dataY,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '月'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '貸出冊数'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    </body>    
+    
+    </main>
     <footer>
         <p>© 2024 図書館システム</p>
     </footer>

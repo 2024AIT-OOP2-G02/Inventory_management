@@ -18,7 +18,10 @@ def index():
     gender_data = {
         "gender_count": [Gender().Count(0), Gender().Count(1)]
     }
-    return render_template('index.html', gender_data=gender_data)
+
+    book_data = get_book_data()
+    month_data = get_monthly_summary()
+    return render_template('index.html', book_data=book_data, gender_data=gender_data, month_data=month_data)
 
 if __name__ == '__main__':
     app.run(port=8080, debug=True)
