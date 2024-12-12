@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from models import initialize_database
 from routes import blueprints
-from routes import get_book_data, get_gender_data, get_month_summary
+from routes import get_book_data, get_gender_data, get_monthly_summary
 
 app = Flask(__name__)
 
