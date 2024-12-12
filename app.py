@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from models import initialize_database
 from routes import blueprints
+from routes.book import get_book_data
 
 app = Flask(__name__)
 
