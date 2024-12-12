@@ -19,39 +19,40 @@
                 <li><a href="{{ url_for('order.list') }}">貸出中</a></li>
             </ul>
         </nav>
+        
+        <body>
+            <script>
+                const book_data = {{book_data | tojson}};
+                
+                const labels = book_data.map(data => data.name);
+                const data = book_data.map(data => data.count);
+                
+                const ctx = document.getElementById('book_chart').getContext('2d');
+                new Chart(cts, {
+                    type: bar,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            labels: "貸出冊数",
+                            data: counts,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+            </script>
+        </body>
     </main>
-
     <footer>
         <p>© 2024 図書館システム</p>
     </footer>
-    
-    <script>
-        const book_data = {{book_data | tojson}};
-        
-        const labels = book_data.map(data => data.name);
-        const data = book_data.map(data => data.count);
-        
-        const ctx = document.getElementById('book_chart').getContext('2d');
-        new Chart(cts, {
-            type: bar,
-            data: {
-                labels: labels,
-                datasets: [{
-                    labels: "貸出冊数",
-                    data: counts,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        })
-    </script>
 </body>
 </html>
 
