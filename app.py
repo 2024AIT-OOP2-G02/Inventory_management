@@ -1,7 +1,10 @@
 from flask import Flask, render_template
 from models import initialize_database
 from routes import blueprints
-from routes import get_book_data, get_gender_data, get_monthly_summary
+
+from routes.book import get_book_data
+from routes.gender import Gender
+
 
 app = Flask(__name__)
 
@@ -15,8 +18,11 @@ for blueprint in blueprints:
 # ホームページのルート
 @app.route('/')
 def index():
+    gender_data = {
+        "gender_count": [Gender().Count(0), Gender().Count(1)]
+    }
+
     book_data = get_book_data()
-    gender_data = get_gender_data()
     month_data = get_monthly_summary()
     return render_template('index.html', book_data=book_data, gender_data=gender_data, month_data=month_data)
 

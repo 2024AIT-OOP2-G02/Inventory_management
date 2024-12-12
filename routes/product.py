@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from models import Product
+from .book import get_book_data
 
 # Blueprintの作成
 product_bp = Blueprint('product', __name__, url_prefix='/products')
@@ -26,6 +27,7 @@ def add():
 
 @product_bp.route('/edit/<int:product_id>', methods=['GET', 'POST'])
 def edit(product_id):
+    get_book_data()
     product = Product.get_or_none(Product.id == product_id)
     if not product:
         return redirect(url_for('product.list'))
