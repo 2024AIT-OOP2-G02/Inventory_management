@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>図書館</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -19,6 +20,41 @@
                 <li><a href="{{ url_for('order.list') }}">貸出中</a></li>
             </ul>
         </nav>
+        <canvas id="book_chart"></canvas>
+        <section>
+            <h2>貸出データ</h2>
+            <canvas id="book_data"></canvas>
+        </section>
+        
+        <body>
+            <script>
+                const book_data = {{book_data | tojson}};
+                
+                const labels = book_data.map(data => data.name);
+                const data = book_data.map(data => data.count);
+                
+                const ctx = document.getElementById('book_data').getContext('2d');
+                new Chart(cts, {
+                    type: bar,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            labels: "貸出冊数",
+                            data: counts,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+            </script>
+        </body>
     
     
     <body>
@@ -67,7 +103,6 @@
     </body>    
     
     </main>
-
     <footer>
         <p>© 2024 図書館システム</p>
     </footer>
