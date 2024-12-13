@@ -58,33 +58,36 @@
             <h2>貸出データ</h2>
             <canvas id="book_data" width="400" height="400"></canvas>
             <script>
-            // 貸出データ棒グラフ
-            const book_data = {{ book_data | tojson }};
-            const labels = book_data.map(data => data.name);
-            const counts = book_data.map(data => data.count);
+                const book_data = {{ book_data | tojson }};
+                console.log("Received book_data:", book_data); // デバッグ用
 
-            const bookCtx = document.getElementById('book_data').getContext('2d');
-            new Chart(bookCtx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "貸出冊数",
-                        data: counts,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // データを分解
+                const labels = book_data.map(data => data.name);
+                const counts = book_data.map(data => data.count);
+
+                // グラフの作成
+                const bookCtx = document.getElementById('book_data').getContext('2d');
+                new Chart(bookCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "貸出冊数",
+                            data: counts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
+                });
             </script>
         </section>
 
