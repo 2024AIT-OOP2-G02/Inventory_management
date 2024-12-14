@@ -6,123 +6,157 @@
     <title>図書館</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
     <header>
         <h1 class="title">図書館システム</h1>
     </header>
 
     <main class="container">
+        <nav class="navigation">
+            <ul class="menu">
+                <li><a href="{{ url_for('user.list') }}">ユーザー情報</a></li>
+                <li><a href="{{ url_for('product.list') }}">蔵書一覧</a></li>
+                <li><a href="{{ url_for('order.list') }}">貸出中</a></li>
+            </ul>
+        </nav>
+
         <section>
             <h2>男女の性別割合</h2>
             <canvas id="genderChart" width="400" height="400"></canvas>
+            <script>
+                // 性別円グラフ
+                const genderData = {{ gender_data | tojson }};
+                const genderLabels = ['男', '女'];
+                const genderCounts = genderData.gender_count;
+    
+                const genderCtx = document.getElementById('genderChart').getContext('2d');
+                new Chart(genderCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: genderLabels,
+                        datasets: [{
+                            data: genderCounts,
+                            backgroundColor: ['#36A2EB', '#FF6384'],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                        },
+                    },
+                });
+            </script>
         </section>
 
         <section>
             <h2>貸出データ</h2>
             <canvas id="book_data" width="400" height="400"></canvas>
+            <script>
+                const book_data = {{ book_data | tojson }};
+                console.log("Received book_data:", book_data); // デバッグ用
+
+                // データを分解
+                const labels = book_data.map(data => data.name);
+                const counts = book_data.map(data => data.count);
+
+                // グラフの作成
+                const bookCtx = document.getElementById('book_data').getContext('2d');
+                new Chart(bookCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "貸出冊数",
+                            data: counts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
         </section>
 
         <section>
             <h2>月毎の貸出冊数</h2>
             <canvas id="book_count" width="400" height="200"></canvas>
+            <script>
+                // Pythonから受け取るデータ
+                const monthData = {{ month_data | tojson }};
+                console.log("Received monthData:", monthData); // デバッグ用
+
+                // データが空の場合の対応
+                if (!Array.isArray(monthData) || monthData.length === 0) {
+                    console.warn("月毎の貸出データが空です。デフォルトデータを使用します。");
+                    // デフォルトの空データ
+                    var dataX = ["1月", "2月", "3月"];
+                    var dataY = [0, 0, 0];
+                } else {
+                    // データを分解
+                    var dataX = monthData.map(item => item.month || "不明な月");
+                    var dataY = monthData.map(item => item.book_count || 0);
+                }
+
+                // グラフの作成
+                const ctx = document.getElementById('book_count').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dataX, // X軸
+                        datasets: [{
+                            label: '貸し出し冊数',
+                            data: dataY, // Y軸
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            tension: 0.3 // 線を滑らかにする
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '月' // X軸のタイトル
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '貸出冊数' // Y軸のタイトル
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                        }
+                    }
+                });
+            </script>
         </section>
     </main>
 
-    <footer>
-        <p>© 2024 図書館システム</p>
-    </footer>
-
-    <script>
-        // 性別円グラフ
-        const genderData = {{ gender_data | tojson }};
-        const genderLabels = ['男', '女'];
-        const genderCounts = genderData.gender_count;
-
-        const genderCtx = document.getElementById('genderChart').getContext('2d');
-        new Chart(genderCtx, {
-            type: 'pie',
-            data: {
-                labels: genderLabels,
-                datasets: [{
-                    data: genderCounts,
-                    backgroundColor: ['#36A2EB', '#FF6384'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                },
-            },
-        });
-
-        // 貸出データ棒グラフ
-        const book_data = {{ book_data | tojson }};
-        const labels = book_data.map(data => data.name);
-        const counts = book_data.map(data => data.count);
-
-        const bookCtx = document.getElementById('book_data').getContext('2d');
-        new Chart(bookCtx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "貸出冊数",
-                    data: counts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // 月毎の貸出冊数折れ線グラフ
-        const dataX = {{ month | tojson }};
-        const dataY = {{ book_count | tojson }};
-
-        const monthCtx = document.getElementById('book_count').getContext('2d');
-        new Chart(monthCtx, {
-            type: 'line',
-            data: {
-                labels: dataX,
-                datasets: [{
-                    label: '月毎の貸出冊数',
-                    data: dataY,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '月'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: '貸出冊数'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
 </body>
+
+<footer>
+    <p>© 2024 図書館システム</p>
+</footer>
+
 </html>
